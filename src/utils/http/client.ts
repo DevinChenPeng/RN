@@ -23,7 +23,7 @@ import {
   DEFAULT_VALIDATE_STATUS,
 } from './constants';
 import { headersToMap, normalizeHeaderKey, responseHeadersToMap } from './headers';
-import { toNormalizedConfig } from './config';
+import { NormalizationDefaults, toNormalizedConfig } from './config';
 import { createAbortController } from './abort';
 import { parseResponseData } from './response';
 import { HttpClientError, isHttpError } from './error';
@@ -117,14 +117,14 @@ export class FetchHttpClient implements HttpClient {
     config: RequestConfig<TBody>,
   ): Promise<HttpResponse<TResponse, TBody>> {
     // 先组装本次请求的默认配置快照。
-    const defaults = {
+    const defaults: NormalizationDefaults = {
       baseURL: this.baseURL,
       headers: this.defaultHeaders,
       timeout: this.timeout,
       retries: this.retries,
       retryDelay: this.retryDelay,
       validateStatus: this.validateStatus,
-      responseType: this.responseType,
+      responseType: this.responseType || 'json',
     };
 
     // 归一化后，配置字段具备稳定结构。
